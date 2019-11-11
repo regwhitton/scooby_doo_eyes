@@ -4,7 +4,7 @@ This is fun art.
 
 OpenCV is used to reflect back the eyes of the watcher - Scooby Doo style.
 
-![Scooby Doo Eyes](file:///Projects/scooby_doo_eyes/eyes.jpg)
+![Scooby Doo Eyes](./eyes.jpg)
 
 Credits:
 * This is inspired by, and re-uses code from [Real-time facial landmark detection with OpenCV, Python, and dlib](https://www.pyimagesearch.com/2017/04/17/real-time-facial-landmark-detection-opencv-python-dlib/) by Adrian Rosebrock 
