@@ -1,3 +1,5 @@
+#!./env/python
+
 from imutils.video import VideoStream
 import cv2
 import pyautogui

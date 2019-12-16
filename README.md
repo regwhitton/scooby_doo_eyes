@@ -34,22 +34,22 @@ Install by muddling through <https://conda.io/projects/conda/en/latest/user-guid
 
 At the "Anaconda Prompt" enter:
 
-    conda config --add channels conda-forge
-    conda install py-opencv scipy imutils dlib pyautogui
+    cd <path-to>\scooby_doo_eyes
+    conda env create --prefix ./env --file environment.yml
 
-This bit takes a while.
+You may be asked if you are sure - enter 'Y' and press enter.  This bit takes a while.
 
 ### Fetch face detector
 
 At the "Anaconda Prompt" enter:
 
-    pip install wget
-    python fetch-model.py
+    cd <path-to>\scooby_doo_eyes
+    env\python fetch-model.py
 
 ### Run
 
 At the "Anaconda Prompt" enter:
 
-    python scooby_doo_eyes.py
+    env\python scooby_doo_eyes.py
 
-Quit by typing q
+Quit by pressing ESC key.  Display the intermediate stages by pressing 0, 1, 2 etc..
