@@ -1,6 +1,7 @@
 import cv2
 import dlib
 from imutils import face_utils, resize
+import numpy as np
 
 SHAPE_PREDICTOR = './shape_predictor_68_face_landmarks.dat'
 
@@ -22,12 +23,11 @@ def to_list_index(keypress):
     digit = keypress - ord("0")
     return digit if digit < max else max
 
-
 def tx_mirror_flip(frame):
     return cv2.flip(frame, 1)
 
-def tx_grey_scale(frame):
-    return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+# def tx_grey_scale(frame):
+#     return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 def tx_scale(frame):
     return resize(frame, width=450)
@@ -62,14 +62,21 @@ def tx_outline_eyes(frame):
         outline_shape(frame, right_eye)
     return frame
 
+def paint_shape(frame, shape):
+    cv2.drawContours(frame, [shape], -1, (107, 235, 242), cv2.FILLED)
+
+def tx_eyes_only_on_black(frame):
+    black_frame = np.zeros(frame.shape, frame.dtype)
+    for face in detect_faces(frame):
+        (left_eye, right_eye) = find_eyes_in_rect(frame, face)
+        paint_shape(black_frame, left_eye)
+        paint_shape(black_frame, right_eye)
+    return black_frame
+    
 transformation_lists = [
     [],
-    # [tx_mirror_flip],
-    # [tx_mirror_flip, tx_grey_scale],
-    # [tx_mirror_flip, tx_grey_scale, tx_outline_faces],
-    # [tx_mirror_flip, tx_grey_scale, tx_outline_eyes]
     [tx_mirror_flip],
-    [tx_scale, tx_grey_scale],
-    [tx_scale, tx_grey_scale, tx_outline_faces],
-    [tx_outline_eyes]
+    [tx_mirror_flip, tx_outline_faces],
+    [tx_mirror_flip, tx_outline_eyes],
+    [tx_mirror_flip, tx_eyes_only_on_black],
 ]
