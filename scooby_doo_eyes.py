@@ -1,17 +1,17 @@
 #!./env/python
 
-from imutils.video import VideoStream
+from imutils.video import VideoStream, WebcamVideoStream
 import cv2, sys
 import pyautogui
 from transformations import transform
-# import numpy as np
+import numpy as np
 
 ESCAPE_KEY = ord("\x1B")
 
 def main():
     keyboard = Keyboard()
-    camera = Camera()
     window = Window()
+    camera = Camera()
     while keyboard.get_last_key() != ESCAPE_KEY:
         frame = camera.grab_frame()
         new_frame = transform(keyboard.get_last_key(), frame)
@@ -23,11 +23,29 @@ class Window:
         pyautogui.FAILSAFE = False
         cv2.namedWindow(Window.NAME, cv2.WINDOW_GUI_EXPANDED)
         cv2.setWindowProperty(Window.NAME, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        pyautogui.moveTo(3000, 3000)
-        ## Maybe scale in display
-        # (x, y, w, h) = cv2.getWindowImageRect(Window.NAME)
-        # black_frame = np.zeros((w, h), np.uint8)
-        # self.display(black_frame)
+        pyautogui.moveTo(4000, 4000)
+        (self.width, self.height) = self.get_window_size()
+        self.paint_window_background_black()
+
+    def get_window_size(self):
+        wide_white_image = np.full([100,4000], 255, np.dtype('uint8'))
+        cv2.imshow(Window.NAME, wide_white_image)
+        cv2.waitKey(1)
+        (_,_,width,_) = cv2.getWindowImageRect(Window.NAME)
+
+        tall_white_image = np.full([4000,100], 255, np.dtype('uint8'))
+        cv2.imshow(Window.NAME, tall_white_image)
+        cv2.waitKey(1)
+        (_,_,_,height) = cv2.getWindowImageRect(Window.NAME)
+
+        print("Screen size: %d x %d" % (width, height))
+        return (width, height)
+
+    def paint_window_background_black(self):
+        black_window_image = np.zeros([self.height,self.width], np.dtype('uint8'))
+        cv2.imshow(Window.NAME, black_window_image)
+        cv2.waitKey(1)
+
     def __del__(self):
         cv2.destroyWindow(Window.NAME)
         
@@ -37,7 +55,15 @@ class Window:
 class Camera:
     def __init__(self):
         vs = VideoStream(src=0, usePiCamera=False)
+        # if isinstance(vs.stream, WebcamVideoStream):
+        #     # Setting camera size is ignored or stops camera if camera doesn't support size.
+        #     vs.stream.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        #     vs.stream.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         vs.start()
+        if isinstance(vs.stream, WebcamVideoStream):
+            width = vs.stream.stream.get(cv2.CAP_PROP_FRAME_WIDTH)
+            height = vs.stream.stream.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            print("Video frame size: %d x %d" % (width, height))
         self.vs = vs
 
     def __del__(self):
