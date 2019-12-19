@@ -23,28 +23,10 @@ class Window:
         pyautogui.FAILSAFE = False
         cv2.namedWindow(Window.NAME, cv2.WINDOW_GUI_EXPANDED)
         cv2.setWindowProperty(Window.NAME, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        pyautogui.moveTo(4000, 4000)
-        (self.width, self.height) = self.get_window_size()
-        self.paint_window_background_black()
-
-    def get_window_size(self):
-        wide_white_image = np.full([100,4000], 255, np.dtype('uint8'))
-        cv2.imshow(Window.NAME, wide_white_image)
-        cv2.waitKey(1)
-        (_,_,width,_) = cv2.getWindowImageRect(Window.NAME)
-
-        tall_white_image = np.full([4000,100], 255, np.dtype('uint8'))
-        cv2.imshow(Window.NAME, tall_white_image)
-        cv2.waitKey(1)
-        (_,_,_,height) = cv2.getWindowImageRect(Window.NAME)
-
+        cv2.setWindowProperty(Window.NAME, cv2.WND_PROP_ASPECT_RATIO, cv2.WINDOW_FREERATIO)
+        (_,_,width,height) = cv2.getWindowImageRect(Window.NAME)
         print("Screen size: %d x %d" % (width, height))
-        return (width, height)
-
-    def paint_window_background_black(self):
-        black_window_image = np.zeros([self.height,self.width], np.dtype('uint8'))
-        cv2.imshow(Window.NAME, black_window_image)
-        cv2.waitKey(1)
+        pyautogui.moveTo(width, height)
 
     def __del__(self):
         cv2.destroyWindow(Window.NAME)
